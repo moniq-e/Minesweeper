@@ -1,7 +1,6 @@
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Color;
-import java.awt.Font;
 
 public class Cell extends JButton {
     private boolean bomb = false;
@@ -37,7 +36,7 @@ public class Cell extends JButton {
 			mine.incrementOpenCells();
 			setBackground(Color.BLUE);
 			setForeground(Color.WHITE);
-			setFont(new Font("Arial", Font.BOLD, 24));
+			setFont(mine.getCellFont());
 			if (getNumber() != 0) setText(String.valueOf(getNumber()));
 		} else {
 			setIcon(new ImageIcon("./assets/mine.png"));
@@ -51,6 +50,7 @@ public class Cell extends JButton {
 
 	public void setMarked(boolean marked) {
 		this.marked = marked;
+		mine.getInfo().updateMarkedCells(marked);
 	}
 
 	public int getNumber() {

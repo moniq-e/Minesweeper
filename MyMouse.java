@@ -26,12 +26,12 @@ public class MyMouse extends MouseAdapter {
                     if (c.getNumber() != 0) c.setText(String.valueOf(c.getNumber()));
                 }
 
-                mine.checkForEmpty(c.getPos());
-
                 if (c.isOpen() && c.isBomb()){
                     System.out.println("Resta nada pro beta");
                     mine.lose();
-                }   
+                    return;
+                }
+                mine.checkForEmpty(c.getPos());   
             }
             return;
         }
