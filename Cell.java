@@ -32,10 +32,17 @@ public class Cell extends JButton {
 
 	public void setOpen(boolean open) {
 		this.open = open;
-		mine.incrementOpenCells();
-        setBackground(Color.BLUE);
-        setForeground(Color.WHITE);
-        setFont(new Font("Arial", Font.BOLD, 24));
+
+		if (!isBomb()) {
+			mine.incrementOpenCells();
+			setBackground(Color.BLUE);
+			setForeground(Color.WHITE);
+			setFont(new Font("Arial", Font.BOLD, 24));
+			if (getNumber() != 0) setText(String.valueOf(getNumber()));
+		} else {
+			setIcon(new ImageIcon("./assets/mine.png"));
+			setBackground(Color.RED);
+		}
 	}
 
 	public boolean isMarked() {

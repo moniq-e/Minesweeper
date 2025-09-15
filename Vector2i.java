@@ -1,4 +1,13 @@
 public class Vector2i {
+    public static final Vector2i EAST = of(1, 0);
+    public static final Vector2i SOUTHEAST = of(1, 1);
+    public static final Vector2i SOUTH = of(0, 1);
+    public static final Vector2i WEST = of(-1, 0);
+    public static final Vector2i NORTHWEST = of(-1, -1);
+    public static final Vector2i NORTH = of(0, -1);
+    public static final Vector2i NORTHEAST = of(1, -1);
+    public static final Vector2i SOUTHWEST = of(-1, 1);
+
     private int x;
     private int y;
 

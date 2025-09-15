@@ -1,9 +1,6 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridLayout;
-import java.util.ArrayList;
 import java.util.Stack;
 
 import javax.swing.JFrame;
@@ -17,24 +14,23 @@ public class Minesweeper extends JPanel {
     private int size;
     private Cell[][] grid;
     private JFrame frame;
-    private Timer timer;
     private MyMouse mouse = new MyMouse(this);
     private Vector2i[] offsets = {
-        Vector2i.of(1, 0),
-        Vector2i.of(1, 1),
-        Vector2i.of(0, 1),
-        Vector2i.of(-1, 0),
-        Vector2i.of(-1, -1),
-        Vector2i.of(0, -1),
-        Vector2i.of(1, -1),
-        Vector2i.of(-1, 1)
+        Vector2i.NORTH,
+        Vector2i.SOUTH,
+        Vector2i.EAST,
+        Vector2i.WEST,
+        Vector2i.NORTHEAST,
+        Vector2i.NORTHWEST,
+        Vector2i.SOUTHEAST,
+        Vector2i.SOUTHWEST,
     };
     private int bombs = 0;
     private int openCells = 0;
     private boolean first = true;
 
     public static void main(String[] args) {
-        Minesweeper m = new Minesweeper(5);
+        new Minesweeper(5);
     }
 
     public Minesweeper(int size) {
@@ -81,6 +77,7 @@ public class Minesweeper extends JPanel {
 
         while (!toCheck.isEmpty()) {
             var p = toCheck.pop();
+            var pc = grid[p.getX()][p.getY()];
 
             for (var offset : offsets) {
                 var newPos = new Vector2i(p.getX() + offset.getX(), p.getY() + offset.getY());
@@ -90,7 +87,9 @@ public class Minesweeper extends JPanel {
                 if (newPos.getY() < 0) continue;
 
                 var c = grid[newPos.getX()][newPos.getY()];
-                if (c.getNumber() == 0 && !c.isOpen()) {
+                if (c.isBomb()) continue;
+
+                if ((c.getNumber() == 0 || pc.getNumber() == 0 || isFirst()) && !c.isOpen()) {
                     c.setOpen(true);
                     toCheck.push(c.getPos());
                 }
