@@ -1,4 +1,5 @@
-import java.awt.BorderLayout;
+package com.monique.minesweeper;
+
 import java.awt.Label;
 
 import javax.swing.JPanel;
