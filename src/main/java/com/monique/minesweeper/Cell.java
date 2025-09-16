@@ -5,6 +5,7 @@ import javax.swing.JButton;
 
 import org.mocha.actor.Box;
 import org.mocha.actor.Sprite;
+import org.mocha.gui.Label;
 import org.mocha.util.math.Vector2;
 
 import java.awt.Color;
@@ -20,11 +21,20 @@ public class Cell extends Box {
 	private Minesweeper mine;
 	private Sprite sprite;
 	private Color backgroundColor;
+	private Label label;
 
     public Cell(int x, int y, MyMouse mouse, Minesweeper mine) {
 		super(x, y, 50, 50);
 		this.mine = mine;
+		label = new Label("");
+		addChild(label);
     }
+
+	public void setText(String text) {
+		label.setText(text);
+		label.autoSize();
+		label.setSize(width, height);
+	}
 
 	public boolean isBomb() {
 		return bomb;
