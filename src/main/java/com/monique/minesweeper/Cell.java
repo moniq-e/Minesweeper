@@ -9,10 +9,12 @@ import org.mocha.gui.Label;
 import org.mocha.util.math.Vector2;
 
 import java.awt.Color;
+import java.awt.Font;
 
 public class Cell extends Box {
 	public static final Sprite FLAG = new Sprite("flag.png", 0, 0);
 	public static final Sprite MINE = new Sprite("mine.png", 0, 0);
+	public static final Font CELL_FONT = new Font("Cascadia Mono", 0, 24);
 
     private boolean bomb = false;
     private boolean open = false;
@@ -54,8 +56,8 @@ public class Cell extends Box {
 		if (!isBomb()) {
 			mine.incrementOpenCells();
 			backgroundColor = Color.BLUE;
-			setForeground(Color.WHITE);
-			setFont(mine.getCellFont());
+			label.setForeground(Color.WHITE);
+			label.setFont(CELL_FONT);
 			if (getNumber() != 0) setText(String.valueOf(getNumber()));
 		} else {
 			sprite = MINE;

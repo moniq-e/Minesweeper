@@ -2,7 +2,6 @@ package com.monique.minesweeper;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
@@ -27,7 +26,6 @@ public class Minesweeper extends JPanel {
     private JFrame frame;
     private Timer timer;
     private Info info;
-    private Font cellFont;
     private MyMouse mouse = new MyMouse(this);
     private Vector2[] offsets = {
         new Vector2(0, -1), //NORTH
@@ -257,9 +255,5 @@ public class Minesweeper extends JPanel {
 
     public Info getInfo() {
         return info;
-    }
-
-    public Font getCellFont() {
-        return cellFont;
     }
 }
