@@ -115,7 +115,7 @@ public class Minesweeper extends JPanel {
                 break;
             case 3:
                 totalBombs = 150;
-                size = 18;
+                size = 20;
                 break;
         }
     }
@@ -144,9 +144,9 @@ public class Minesweeper extends JPanel {
                 if (newPos.getY() < 0) continue;
 
                 var c = grid[newPos.getX()][newPos.getY()];
-                if (c.isBomb()) continue;
+                if (c.isBomb() || c.isOpen() || c.isMarked()) continue;
 
-                if ((c.getNumber() == 0 || pc.getNumber() == 0 || isFirst()) && !c.isOpen()) {
+                if ((c.getNumber() == 0 || pc.getNumber() == 0 || isFirst())) {
                     c.setOpen(true);
                     toCheck.push(c.getPos());
                 }
