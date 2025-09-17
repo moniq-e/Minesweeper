@@ -1,30 +1,25 @@
 package com.monique.minesweeper;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.Timer;
 
+import org.mocha.Application;
+import org.mocha.actor.Actor;
+import org.mocha.annotations.Window;
+import org.mocha.gui.CanvasLayer;
 import org.mocha.util.math.Vector2;
 
-import javax.swing.ImageIcon;
 
-
-public class Minesweeper extends JPanel {
+@Window(blackBars = false, defaultFps = 30, title = "Minesweeper", width = 1280, height = 720)
+public class Minesweeper extends Application {
     private int size;
     private Cell[][] grid;
     private ArrayList<Cell> cells;
-    private JFrame frame;
-    private Timer timer;
+    private Actor cellManager;
+    private CanvasLayer cl;
     private Info info;
     private MyMouse mouse = new MyMouse(this);
     private Vector2[] offsets = {
@@ -47,33 +42,19 @@ public class Minesweeper extends JPanel {
     }
 
     public Minesweeper() {
-        timer = new Timer(33, e -> {
-            update();
-        });
+        setIcon("icon.png");
 
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-               //cellFont = new Font("Arial", Font.BOLD, getWidth() / size / 4);
-            }
-        });
+        info = new Info(this);
 
-        frame = new JFrame("Minesweeper");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
-        frame.setIconImage(new ImageIcon("./assets/icon.png").getImage());
+        cl = new CanvasLayer(getWidth(), getHeight() - info.getHeight());
 
-        frame.add(this, BorderLayout.CENTER);
+        cellManager = new Actor(0, 0);
+        cellManager.addChild(cl);
 
-        info = new Info();
-        frame.add(info, BorderLayout.NORTH);
+        scene.addActors(cellManager, info);
 
-        frame.setVisible(true);
-        frame.setSize(new Dimension(500, 500));
-
-        var screen = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setLocation((int) screen.getWidth() / 2 - getSize().width / 2, (int) screen.getHeight() / 2 - getSize().height / 2);
         play();
+        init();
     }
 
     public void play() {
@@ -86,9 +67,7 @@ public class Minesweeper extends JPanel {
         bombs = 0;
         openCells = 0;
         first = true;
-        removeAll();
         initializeGrid();
-        timer.start();
     }
 
     public void chooseDificulty() {
@@ -98,7 +77,7 @@ public class Minesweeper extends JPanel {
             "Hard",
             "Huge"
         };
-        var res = JOptionPane.showOptionDialog(frame, "Choose a dificulty level: ", "Minesweeper - Dificulty", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, 0);
+        var res = JOptionPane.showOptionDialog(this, "Choose a dificulty level: ", "Minesweeper - Dificulty", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, 0);
 
         switch (res) {
             case -1:
@@ -123,10 +102,9 @@ public class Minesweeper extends JPanel {
         }
     }
 
-    public void update() {
-        revalidate();
-        repaint();
-        info.updateTime(.033f);
+    @Override
+    public void update(double deltaTime) {
+        info.updateTime((float) deltaTime);
 
         if (bombs + openCells == size * size) win();
     }
@@ -166,9 +144,9 @@ public class Minesweeper extends JPanel {
                 var c = new Cell(i, j, mouse, this);
                 grid[i][j] = c;
                 cells.add(c);
-                add(c);
             }
         }
+        cellManager.addChildren(cells.toArray(new Cell[cells.size()]));
     }
 
     public void generateBombs() {
@@ -177,6 +155,7 @@ public class Minesweeper extends JPanel {
            if (c.isOpen()) continue;
            c.setBomb(true);
         }
+        cells = null;
 
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
@@ -209,9 +188,8 @@ public class Minesweeper extends JPanel {
             }
         }
 
-        timer.stop();
-        JOptionPane.showMessageDialog(frame, "Voce perdeu.", "Minesweeper", JOptionPane.ERROR_MESSAGE);
-        var again = JOptionPane.showConfirmDialog(frame, "Deseja jogar novamente?", "Minesweeper", JOptionPane.YES_NO_OPTION);
+        JOptionPane.showMessageDialog(this, "Voce perdeu.", "Minesweeper", JOptionPane.ERROR_MESSAGE);
+        var again = JOptionPane.showConfirmDialog(this, "Deseja jogar novamente?", "Minesweeper", JOptionPane.YES_NO_OPTION);
         if (again == 0) {
             play();
             return;
@@ -220,9 +198,8 @@ public class Minesweeper extends JPanel {
     }
 
     public void win() {
-        timer.stop();
-        JOptionPane.showMessageDialog(frame, "Voce ganhou!", "Minesweeper", JOptionPane.INFORMATION_MESSAGE);
-        var again = JOptionPane.showConfirmDialog(frame, "Deseja jogar novamente?", "Minesweeper", JOptionPane.YES_NO_OPTION);
+        JOptionPane.showMessageDialog(this, "Voce ganhou!", "Minesweeper", JOptionPane.INFORMATION_MESSAGE);
+        var again = JOptionPane.showConfirmDialog(this, "Deseja jogar novamente?", "Minesweeper", JOptionPane.YES_NO_OPTION);
         if (again == 0) {
             play();
             return;
@@ -255,5 +232,9 @@ public class Minesweeper extends JPanel {
 
     public Info getInfo() {
         return info;
+    }
+
+    public CanvasLayer getCellManagerCanvasLayer() {
+        return cl;
     }
 }

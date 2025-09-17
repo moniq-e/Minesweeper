@@ -2,8 +2,6 @@ package com.monique.minesweeper;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.ImageIcon;
-
 public class MyMouse extends MouseAdapter {
     private Minesweeper mine;
 

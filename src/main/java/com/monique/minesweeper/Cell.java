@@ -1,15 +1,13 @@
 package com.monique.minesweeper;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-
 import org.mocha.actor.Box;
 import org.mocha.actor.Sprite;
 import org.mocha.gui.Label;
-import org.mocha.util.math.Vector2;
+import org.mocha.util.GraphicsUtil;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
 
 public class Cell extends Box {
 	public static final Sprite FLAG = new Sprite("flag.png", 0, 0);
@@ -29,12 +27,25 @@ public class Cell extends Box {
 		super(x, y, 50, 50);
 		this.mine = mine;
 		label = new Label("");
-		addChild(label);
+		label.setAlignment(.5f, .5f);
+		mine.getCellManagerCanvasLayer().addChild(label);
     }
+
+	@Override
+	public void draw(Graphics2D g2) {
+		var color = g2.getColor();
+		g2.setColor(backgroundColor);
+		GraphicsUtil.drawRotatedRect(getPosition().getFloorX(), getPosition().getFloorY(), getWidth(), getHeight(), rotation, anchor, g2);
+		g2.setColor(color);
+
+		if (sprite != null) {
+			sprite.setPosition(getPosition());
+			sprite.draw(g2);
+		}
+	}
 
 	public void setText(String text) {
 		label.setText(text);
-		label.autoSize();
 		label.setSize(width, height);
 	}
 

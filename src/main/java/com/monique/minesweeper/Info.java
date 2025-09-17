@@ -1,21 +1,24 @@
 package com.monique.minesweeper;
 
-import java.awt.Label;
+import org.mocha.gui.CanvasLayer;
+import org.mocha.gui.Label;
 
-import javax.swing.JPanel;
-
-public class Info extends JPanel {
+public class Info extends CanvasLayer {
     private int totalBombs;
     private int markedCells;
     private float timeElapsed;
     private Label bombLabel;
     private Label timeLabel;
 
-    public Info() {
-        bombLabel = new Label();
-        timeLabel = new Label();
-        add(bombLabel);
-        add(timeLabel);
+    public Info(Minesweeper mine) {
+        super(mine.getWidth(), 100);
+        bombLabel = new Label("");
+        timeLabel = new Label("");
+
+        bombLabel.setSize(getWidth() / 2, 100);
+        timeLabel.setSize(getWidth() / 2, 100);
+
+        addChildren(bombLabel, timeLabel);
     }
 
     public int getTotalBombs() {

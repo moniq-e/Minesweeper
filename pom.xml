@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.github.timidtlk</groupId>
             <artifactId>mocha-devkit</artifactId>
-            <version>-3dd938df0e-1</version>
+            <version>main-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
