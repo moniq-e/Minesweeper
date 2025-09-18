@@ -1,6 +1,6 @@
 package com.monique.minesweeper;
 
-import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -12,8 +12,7 @@ import org.mocha.annotations.Window;
 import org.mocha.gui.CanvasLayer;
 import org.mocha.util.math.Vector2;
 
-
-@Window(blackBars = false, defaultFps = 30, title = "Minesweeper", width = 1280, height = 720)
+@Window(blackBars = true, defaultFps = 30, title = "Minesweeper", width = 1280, height = 720)
 public class Minesweeper extends Application {
     private int size;
     private Cell[][] grid;
@@ -42,8 +41,6 @@ public class Minesweeper extends Application {
     }
 
     public Minesweeper() {
-        setIcon("icon.png");
-
         info = new Info(this);
 
         cl = new CanvasLayer(getWidth(), getHeight() - info.getHeight());
@@ -53,8 +50,11 @@ public class Minesweeper extends Application {
 
         scene.addActors(cellManager, info);
 
+        input.addAction("open", MouseEvent.BUTTON1);
+
         play();
         init();
+        setIcon("icon.png");
     }
 
     public void play() {
@@ -62,7 +62,6 @@ public class Minesweeper extends Application {
         info.setTotalBombs(totalBombs);
         info.setMarkedCells(0);
         info.setTimeElapsed(0);
-        setLayout(new GridLayout(size, size));
 
         bombs = 0;
         openCells = 0;
@@ -104,6 +103,7 @@ public class Minesweeper extends Application {
 
     @Override
     public void update(double deltaTime) {
+        super.update(deltaTime);
         info.updateTime((float) deltaTime);
 
         if (bombs + openCells == size * size) win();
@@ -138,10 +138,12 @@ public class Minesweeper extends Application {
     public void initializeGrid() {
         grid = new Cell[size][size];
         cells = new ArrayList<Cell>(size * size);
+        var width = 1280 / size;
+        var height = 720 / size;
 
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
-                var c = new Cell(i, j, mouse, this);
+                var c = new Cell(i, j, width, height, mouse, this);
                 grid[i][j] = c;
                 cells.add(c);
             }
