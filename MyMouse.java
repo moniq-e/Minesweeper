@@ -22,8 +22,10 @@ public class MyMouse extends MouseAdapter {
 
                 if (mine.isFirst()) {
                     mine.setFirst(false);
+                    var opens = mine.openInitals(c.getPos());
                     mine.generateBombs();
-                    if (c.getNumber() != 0) c.setText(String.valueOf(c.getNumber()));
+
+                    opens.forEach(cell -> mine.checkForEmpty(cell.getPos()));
                 }
 
                 if (c.isOpen() && c.isBomb()){

@@ -59,6 +59,7 @@ public class Cell extends JButton {
 
 	public void setNumber(int number) {
 		this.number = number;
+		if (isOpen() && number != 0) setText(String.valueOf(number));
 	}
 
 	public Vector2i getPos() {

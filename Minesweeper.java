@@ -2,7 +2,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
@@ -68,8 +67,7 @@ public class Minesweeper extends JPanel {
         frame.setVisible(true);
         frame.setSize(new Dimension(500, 500));
 
-        var screen = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setLocation((int) screen.getWidth() / 2 - getSize().width / 2, (int) screen.getHeight() / 2 - getSize().height / 2);
+        frame.setLocationRelativeTo(null);
         play();
     }
 
@@ -256,5 +254,22 @@ public class Minesweeper extends JPanel {
 
     public Font getCellFont() {
         return cellFont;
+    }
+
+    public ArrayList<Cell> openInitals(Vector2i p) {
+        var opens = new ArrayList<Cell>();
+        for (var offset : offsets) {
+            var newPos = new Vector2i(p.getX() + offset.getX(), p.getY() + offset.getY());
+            if (newPos.getX() >= grid.length) continue;
+            if (newPos.getY() >= grid[0].length) continue;
+            if (newPos.getX() < 0) continue;
+            if (newPos.getY() < 0) continue;
+
+            var c = grid[newPos.getX()][newPos.getY()];
+            if (c.isOpen()) continue;
+            c.setOpen(true);
+            opens.add(c);
+        }
+        return opens;
     }
 }
